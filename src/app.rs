@@ -1,15 +1,22 @@
-use eframe::{egui, epi};
+use eframe::{
+    egui::{self, Color32},
+    epi,
+};
+
+use crate::widgets;
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[cfg_attr(feature = "persistence", derive(serde::Deserialize, serde::Serialize))]
 pub struct EaterEmuApp {
     label: String,
+    bit: bool,
 }
 
 impl Default for EaterEmuApp {
     fn default() -> Self {
         Self {
             label: "Hello World!".to_owned(),
+            bit: false,
         }
     }
 }
@@ -34,12 +41,14 @@ impl epi::App for EaterEmuApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
-        let EaterEmuApp { label } = self;
+        let EaterEmuApp { label, bit } = self;
 
         // egui examples: https://emilk.github.io/egui
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading(label.as_str());
+
+            ui.add(widgets::led(bit, Color32::RED));
 
             ui.separator();
 
