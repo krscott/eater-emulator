@@ -2,6 +2,8 @@
 
 An emulator for an Eater-like computer with front-panel GUI.
 
+[Demo](https://krscott.github.io/eater-emulator/)
+
 Generated from [egui_template](https://github.com/emilk/egui_template)
 
 ## Development
