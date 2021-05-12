@@ -395,6 +395,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9ea835d29036a4087793836fa931b08837ad5e957da9e23886b29586fb9b6650"
 
 [[package]]
+name = "eater_emulator"
+version = "0.1.0"
+dependencies = [
+ "eframe",
+ "serde",
+]
+
+[[package]]
 name = "eframe"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -431,14 +439,6 @@ dependencies = [
  "serde",
  "ureq",
  "webbrowser",
-]
-
-[[package]]
-name = "egui_template"
-version = "0.1.0"
-dependencies = [
- "eframe",
- "serde",
 ]
 
 [[package]]
