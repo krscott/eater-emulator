@@ -2,11 +2,11 @@ use eframe::egui::{self, Color32, Response, Ui, Widget};
 
 use crate::widgets::{led, toggle_switch};
 
-fn register_ui(ui: &mut Ui, value: u8, color: Color32) -> Response {
+fn register_ui(ui: &mut Ui, value: u8, len: u8, color: Color32) -> Response {
     ui.horizontal(|ui| {
         ui.spacing_mut().item_spacing = egui::vec2(4.0, 20.0);
 
-        for i in (0..8).rev() {
+        for i in (0..len).rev() {
             let mask = 1u8 << i;
             let bit = value & mask == mask;
 
@@ -16,13 +16,13 @@ fn register_ui(ui: &mut Ui, value: u8, color: Color32) -> Response {
         ui.separator();
         ui.monospace(format!("${:02X}", value));
         ui.separator();
-        ui.monospace(format!("{}", value));
+        ui.monospace(format!("{:03}", value));
     })
     .response
 }
 
-pub fn register(value: u8, color: Color32) -> impl Widget {
-    move |ui: &mut Ui| register_ui(ui, value, color)
+pub fn register(value: u8, len: u8, color: Color32) -> impl Widget {
+    move |ui: &mut Ui| register_ui(ui, value, len, color)
 }
 
 fn register_input_ui(ui: &mut Ui, value: &mut u8) -> Response {

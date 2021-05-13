@@ -3,17 +3,19 @@ use eframe::{
     epi,
 };
 
-use crate::widgets;
+use crate::{cpu::EaterCpu, widgets};
 
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[cfg_attr(feature = "persistence", derive(serde::Deserialize, serde::Serialize))]
 pub struct EaterEmuApp {
-    bus: u8,
+    cpu: EaterCpu,
 }
 
 impl Default for EaterEmuApp {
     fn default() -> Self {
-        Self { bus: 0x55 }
+        Self {
+            cpu: Default::default(),
+        }
     }
 }
 
@@ -37,7 +39,7 @@ impl epi::App for EaterEmuApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
-        let EaterEmuApp { bus } = self;
+        let EaterEmuApp { cpu } = self;
 
         ctx.set_pixels_per_point(1.5);
 
@@ -49,12 +51,44 @@ impl epi::App for EaterEmuApp {
 
         egui::CentralPanel::default().show(ctx, |ui| {
             Grid::new("panel_grid").show(ui, |ui| {
-                ui.heading("Bus");
-                ui.add(widgets::register(*bus, Color32::RED));
+                ui.heading("Output");
+                ui.add(widgets::register(cpu.out, 8, Color32::RED));
+                ui.end_row();
+
+                ui.heading("Reg A");
+                ui.add(widgets::register(cpu.a, 8, Color32::RED));
+                ui.end_row();
+
+                ui.heading("Reg B");
+                ui.add(widgets::register(cpu.b, 8, Color32::RED));
+                ui.end_row();
+
+                ui.heading("IR");
+                ui.add(widgets::register(cpu.ir, 4, Color32::BLUE));
+                ui.end_row();
+
+                ui.heading("MAR");
+                ui.add(widgets::register(cpu.mar, 4, Color32::YELLOW));
+                ui.end_row();
+
+                ui.heading("PC");
+                ui.add(widgets::register(cpu.pc, 4, Color32::RED));
+                ui.end_row();
+
+                ui.heading("T");
+                ui.add(widgets::register(cpu.t, 4, Color32::GREEN));
+                ui.end_row();
+
+                ui.heading("Input");
+                ui.add(widgets::register_input(&mut cpu.a));
                 ui.end_row();
 
                 ui.separator();
-                ui.add(widgets::register_input(bus));
+                ui.separator();
+                ui.end_row();
+
+                ui.heading("Clock");
+                ui.add(widgets::toggle_switch(&mut cpu.clk));
                 ui.end_row();
             });
 

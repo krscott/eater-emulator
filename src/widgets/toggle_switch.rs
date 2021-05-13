@@ -3,7 +3,7 @@ use eframe::egui::{self, Response, Sense, Ui, Widget, WidgetInfo, WidgetType};
 // Based on https://github.com/emilk/egui/blob/master/egui_demo_lib/src/apps/demo/toggle_switch.rs
 
 fn toggle_switch_ui(ui: &mut Ui, on: &mut bool) -> Response {
-    let desired_size = ui.spacing().interact_size.y * egui::vec2(1.0, 2.0);
+    let desired_size = ui.spacing().interact_size.y * egui::vec2(1.0, 1.5);
 
     let (rect, mut response) = ui.allocate_exact_size(desired_size, Sense::click());
 
