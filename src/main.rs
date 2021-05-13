@@ -5,6 +5,6 @@
 // When compiling natively:
 #[cfg(not(target_arch = "wasm32"))]
 fn main() {
-    let app = eater_emulator_lib::EaterEmuApp::default();
+    let app = eater_emulator::EaterEmuApp::default();
     eframe::run_native(Box::new(app));
 }

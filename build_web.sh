@@ -14,7 +14,8 @@ OUTPUT_DIR="dist"
 export RUSTFLAGS=--cfg=web_sys_unstable_apis
 
 # Clear output from old stuff:
-rm -f $OUTPUT_DIR/${CRATE_NAME_SNAKE_CASE}_bg.wasm
+# rm -f $OUTPUT_DIR/${CRATE_NAME_SNAKE_CASE}_bg.wasm
+rm -rf "$OUTPUT_DIR"
 
 echo "Building rust…"
 BUILD=release
