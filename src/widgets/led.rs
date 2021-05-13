@@ -1,7 +1,9 @@
-use eframe::egui::{vec2, Color32, Response, Sense, Ui, Widget, WidgetInfo, WidgetType};
+use eframe::egui::{
+    vec2, Align2, Color32, Response, Sense, TextStyle, Ui, Widget, WidgetInfo, WidgetType,
+};
 
-fn led_ui(ui: &mut Ui, on: &mut bool, color: Color32) -> Response {
-    let desired_size = ui.spacing().interact_size.y * vec2(2.0, 1.0);
+fn led_ui(ui: &mut Ui, on: &mut bool, color: Color32, label: String) -> Response {
+    let desired_size = ui.spacing().interact_size.y * vec2(1.0, 1.0);
 
     let (rect, mut response) = ui.allocate_exact_size(desired_size, Sense::click());
 
@@ -10,7 +12,7 @@ fn led_ui(ui: &mut Ui, on: &mut bool, color: Color32) -> Response {
         response.mark_changed();
     }
 
-    response.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, *on, ""));
+    response.widget_info(|| WidgetInfo::selected(WidgetType::Checkbox, *on, &label));
 
     let anim_on = ui.ctx().animate_bool(response.id, *on);
 
@@ -26,11 +28,20 @@ fn led_ui(ui: &mut Ui, on: &mut bool, color: Color32) -> Response {
     ui.painter()
         .circle(center, radius, fill_color, visuals.fg_stroke);
 
+    ui.painter().text(
+        center,
+        Align2::CENTER_CENTER,
+        &label,
+        TextStyle::Button,
+        ui.style().visuals.text_color(),
+    );
+
     response
 }
 
-pub fn led(on: &mut bool, color: Color32) -> impl Widget + '_ {
-    move |ui: &mut Ui| led_ui(ui, on, color)
+pub fn led<S: Into<String>>(on: &mut bool, color: Color32, label: S) -> impl Widget + '_ {
+    let label: String = label.into();
+    move |ui: &mut Ui| led_ui(ui, on, color, label)
 }
 
 fn color_to_f32_tuple(color: Color32) -> (f32, f32, f32, f32) {
