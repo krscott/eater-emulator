@@ -16,9 +16,8 @@ fn led_ui(ui: &mut Ui, on: &mut bool, color: Color32, label: String) -> Response
 
     let anim_on = ui.ctx().animate_bool(response.id, *on);
 
-    let visuals = ui.style().interact_selectable(&response, *on);
-
-    let rect = rect.expand(visuals.expansion);
+    // let visuals = ui.style().interact_selectable(&response, *on);
+    // let rect = rect.expand(visuals.expansion);
 
     let center = rect.center();
     let radius = 0.5 * rect.height();
@@ -26,7 +25,7 @@ fn led_ui(ui: &mut Ui, on: &mut bool, color: Color32, label: String) -> Response
     let fill_color = lerp_color_rgb(Color32::BLACK, color, anim_on);
 
     ui.painter()
-        .circle(center, radius, fill_color, visuals.fg_stroke);
+        .circle(center, radius, fill_color, ui.visuals().window_stroke());
 
     ui.painter().text(
         center,

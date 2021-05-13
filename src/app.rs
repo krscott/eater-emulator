@@ -9,16 +9,14 @@ use crate::widgets;
 #[cfg_attr(feature = "persistence", derive(serde::Deserialize, serde::Serialize))]
 pub struct EaterEmuApp {
     label: String,
-    bit0: bool,
-    bit1: bool,
+    reg: u8,
 }
 
 impl Default for EaterEmuApp {
     fn default() -> Self {
         Self {
             label: "Hello World!".to_owned(),
-            bit0: false,
-            bit1: false,
+            reg: 0x55,
         }
     }
 }
@@ -43,17 +41,14 @@ impl epi::App for EaterEmuApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
-        let EaterEmuApp { label, bit0, bit1 } = self;
+        let EaterEmuApp { label, reg } = self;
 
         // egui examples: https://emilk.github.io/egui
 
         egui::CentralPanel::default().show(ctx, |ui| {
             ui.heading(label.as_str());
 
-            ui.horizontal(|ui| {
-                ui.add(widgets::led(bit0, Color32::RED, "0"));
-                ui.add(widgets::led(bit1, Color32::RED, "1"));
-            });
+            ui.add(widgets::register(reg, Color32::RED, "Bus"));
 
             ui.separator();
 
