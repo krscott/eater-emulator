@@ -8,12 +8,12 @@ use crate::widgets;
 /// We derive Deserialize/Serialize so we can persist app state on shutdown.
 #[cfg_attr(feature = "persistence", derive(serde::Deserialize, serde::Serialize))]
 pub struct EaterEmuApp {
-    reg: u8,
+    bus: u8,
 }
 
 impl Default for EaterEmuApp {
     fn default() -> Self {
-        Self { reg: 0x55 }
+        Self { bus: 0x55 }
     }
 }
 
@@ -37,7 +37,7 @@ impl epi::App for EaterEmuApp {
     /// Called each time the UI needs repainting, which may be many times per second.
     /// Put your widgets into a `SidePanel`, `TopPanel`, `CentralPanel`, `Window` or `Area`.
     fn update(&mut self, ctx: &egui::CtxRef, _frame: &mut epi::Frame<'_>) {
-        let EaterEmuApp { reg } = self;
+        let EaterEmuApp { bus } = self;
 
         ctx.set_pixels_per_point(1.5);
 
@@ -50,10 +50,11 @@ impl epi::App for EaterEmuApp {
         egui::CentralPanel::default().show(ctx, |ui| {
             Grid::new("panel_grid").show(ui, |ui| {
                 ui.heading("Bus");
-                ui.add(widgets::register(*reg, Color32::RED));
+                ui.add(widgets::register(*bus, Color32::RED));
                 ui.end_row();
-                ui.heading("Bus2?");
-                ui.add(widgets::register(*reg, Color32::RED));
+
+                ui.separator();
+                ui.add(widgets::register_input(bus));
                 ui.end_row();
             });
 
