@@ -1,49 +1,29 @@
-use eframe::egui::{Color32, Label, Response, Ui, Widget};
+use eframe::egui::{self, Color32, Response, Ui, Widget};
 
 use crate::widgets::led;
 
-fn register_ui(ui: &mut Ui, value: &mut u8, color: Color32, label: String) -> Response {
+fn register_ui(ui: &mut Ui, value: u8, color: Color32) -> Response {
     // let desired_size = vec2(ui.available_width(), ui.spacing().interact_size.y);
     // let response = ui.allocate_response(desired_size, Sense::hover());
 
-    let mut changed = false;
+    ui.horizontal(|ui| {
+        ui.spacing_mut().item_spacing = egui::vec2(4.0, 20.0);
 
-    let mut response = ui
-        .horizontal(|ui| {
-            ui.add(Label::new(label).strong());
+        for i in (0..8).rev() {
+            let mask = 1u8 << i;
+            let bit = value & mask == mask;
 
-            for i in (0..8).rev() {
-                let mask = 1u8 << i;
-                let mut bit = *value & mask == mask;
+            ui.add(led(bit, color, i.to_string()));
+        }
 
-                let resp = ui.add(led(&mut bit, color, i.to_string()));
-
-                if resp.clicked() {
-                    *value ^= mask;
-                    changed = true;
-                }
-            }
-
-            let mut hex_string = format!("{:02X}", value);
-            let resp = ui.text_edit_singleline(&mut hex_string);
-
-            if resp.changed() {
-                if let Ok(new_value) = u8::from_str_radix(&hex_string, 16) {
-                    *value = new_value;
-                    changed = true;
-                }
-            }
-        })
-        .response;
-
-    if changed {
-        response.mark_changed();
-    }
-
-    response
+        ui.separator();
+        ui.monospace(format!("${:02X}", value));
+        ui.separator();
+        ui.monospace(format!("{}", value));
+    })
+    .response
 }
 
-pub fn register<S: Into<String>>(value: &mut u8, color: Color32, label: S) -> impl Widget + '_ {
-    let label: String = label.into();
-    move |ui: &mut Ui| register_ui(ui, value, color, label)
+pub fn register(value: u8, color: Color32) -> impl Widget {
+    move |ui: &mut Ui| register_ui(ui, value, color)
 }
